@@ -1,0 +1,85 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["multiSchema"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["dbteste"]
+}
+
+model User {
+  uuid          String   @id @default(uuid())
+  email         String   @unique
+  name          String?
+  password_hash String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@schema("dbteste")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ws_empresas {
+  uuid                        String    @id
+  cnpj_raiz                   BigInt?
+  razao_social                String?
+  capital_social              String?
+  responsavel_federativo      String?
+  atualizado_em               DateTime? @db.Timestamptz(6)
+  created_at                  DateTime? @db.Timestamptz(6)
+  updated_at                  DateTime? @db.Timestamptz(6)
+  socios                      String?
+  simples                     String?
+  atividade_principal         Json?
+  atividades_secundarias      String?
+  bairro                      String?
+  cep                         BigInt?
+  cnpj                        BigInt    @unique
+  cnpj_digito_verificador     String?
+  cnpj_ordem                  BigInt?
+  complemento                 String?
+  data_inicio_atividade       String?
+  data_situacao_cadastral     String?
+  data_situacao_especial      String?
+  ddd1                        String?
+  ddd2                        String?
+  ddd_fax                     String?
+  email                       String?
+  fax                         String?
+  inscricoes_estaduais        String?
+  logradouro                  String?
+  nome_cidade_exterior        String?
+  nome_fantasia               String?
+  numero                      String?
+  situacao_cadastral          String?
+  situacao_especial           String?
+  telefone1                   String?
+  telefone2                   String?
+  tipo                        String?
+  tipo_logradouro             String?
+  cidade                      Json?
+  estado                      Json?
+  pais                        Json?
+  porte                       Json?
+  natureza_juridica           Json?
+  qualificacao_do_responsavel String?
+  motivo_situacao_cadastral   String?
+
+  @@map("ws-empresas")
+  @@schema("dbteste")
+}
+
+model Client {
+  uuid      String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  phone     String?
+  wsempresa String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@schema("dbteste")
+}
